@@ -23,17 +23,6 @@ const App = () => {
     }
   };
 
-  const handlePersonChange = (event) => {
-    setNewName(event.target.value);
-  };
-  const handleNumberChange = (event) => {
-    setNewNumber(event.target.value);
-  };
-
-  const handleFilter = (event) => {
-    setNewFilter(event.target.value);
-  };
-
   return (
     <div>
       <h2>Phonebook</h2>
@@ -41,14 +30,15 @@ const App = () => {
         <div>
           <div>
             <label>filter:</label>
-            <input onChange={handleFilter} />
+            <input onChange={(event) => setNewFilter(event.target.value)} />
           </div>
           <h2>Add a new</h2>
           <label>name:</label>
-          <input onChange={handlePersonChange} />
+          <input onChange={(event) => setNewName(event.target.value)} />
         </div>
         <div>
-          <label>number:</label> <input onChange={handleNumberChange} />
+          <label>number:</label> 
+          <input onChange={(event) => setNewNumber(event.target.value)} />
         </div>
         <div>
           <button type="submit">add</button>
