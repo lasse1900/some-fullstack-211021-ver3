@@ -10,21 +10,53 @@ const Filter = ({ setNewFilter }) => {
   );
 };
 
-// const PersonForm = ({setNewPerson, newPerson, addPerson}) => {
-//   return (
-//     <div>
-//           <div>
-//             <h2>Add a new</h2>
-//             <label>name:</label>
-//             <input onChange={(event) => setNewPerson({...newPerson, name: event.target.value})}/>
-//           </div>
-//           <div>
-//             <label>number:</label>
-//             <input onChange={(event) => setNewPerson({...newPerson, number: event.target.value})} />
-//           </div>
-//     </div>
-//   )
-// };
+const PersonForm = ({ setNewPerson, newPerson, addPerson }) => {
+  return (
+    <div>
+      <form onSubmit={addPerson}>
+        <div>
+          <h2>Add a new</h2>
+          <label>name:</label>
+          <input
+            onChange={(event) =>
+              setNewPerson({ ...newPerson, name: event.target.value })
+            }
+          />
+        </div>
+        <div>
+          <label>number:</label>
+          <input
+            onChange={(event) =>
+              setNewPerson({ ...newPerson, number: event.target.value })
+            }
+          />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+const PersonsList = ({ persons, newFilter }) => {
+  return (
+    <div>
+      <h2>Numbers</h2>
+      <ul>
+        {persons
+          .filter((person) =>
+            person.name.toLowerCase().includes(newFilter.toLowerCase())
+          )
+          .map((person) => (
+            <li key={person.name}>
+              {person.name} {person.number}
+            </li>
+          ))}
+      </ul>
+    </div>
+  );
+};
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -47,43 +79,26 @@ const App = () => {
   };
 
   return (
-    <div>
+    <>
       <h2>Phonebook</h2>
-      <form onSubmit={addPerson}>
+      <div>
         <div>
           <div>
             <Filter setNewFilter={setNewFilter} />
           </div>
-          <>
-          {/* <PersonForm setNewPerson={setNewPerson} newPerson={newPerson} addPerson={addPerson} /> */}
           <div>
-            <h2>Add a new</h2>
-            <label>name:</label>
-            <input onChange={(event) => setNewPerson({...newPerson, name: event.target.value})}/>
+            <PersonForm
+              setNewPerson={setNewPerson}
+              newPerson={newPerson}
+              addPerson={addPerson}
+            />
           </div>
-          <div>
-            <label>number:</label>
-            <input onChange={(event) => setNewPerson({...newPerson, number: event.target.value})} />
-          </div>
-          </>
         </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <ul>
-        {persons
-          .filter((person) =>
-            person.name.toLowerCase().includes(newFilter.toLowerCase())
-          )
-          .map((person) => (
-            <li key={person.name}>
-              {person.name} {person.number}
-            </li>
-          ))}
-      </ul>
-    </div>
+      </div>
+      <div>
+        <PersonsList persons={persons} newFilter={newFilter} />
+      </div>
+    </>
   );
 };
 
