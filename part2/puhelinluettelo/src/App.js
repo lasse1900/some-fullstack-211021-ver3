@@ -1,62 +1,8 @@
 import React, { useState } from "react";
+import { Filter } from "./components/Filter";
+import { PersonForm } from "./components/PersonForm";
+import { PersonsList } from "./components/PersonsList";
 import "./App.css";
-
-const Filter = ({ setNewFilter }) => {
-  return (
-    <div>
-      <label>filter:</label>
-      <input onChange={(event) => setNewFilter(event.target.value)} />
-    </div>
-  );
-};
-
-const PersonForm = ({ setNewPerson, newPerson, addPerson }) => {
-  return (
-    <div>
-      <form onSubmit={addPerson}>
-        <div>
-          <h2>Add a new</h2>
-          <label>name:</label>
-          <input
-            onChange={(event) =>
-              setNewPerson({ ...newPerson, name: event.target.value })
-            }
-          />
-        </div>
-        <div>
-          <label>number:</label>
-          <input
-            onChange={(event) =>
-              setNewPerson({ ...newPerson, number: event.target.value })
-            }
-          />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-    </div>
-  );
-};
-
-const PersonsList = ({ persons, newFilter }) => {
-  return (
-    <div>
-      <h2>Numbers</h2>
-      <ul>
-        {persons
-          .filter((person) =>
-            person.name.toLowerCase().includes(newFilter.toLowerCase())
-          )
-          .map((person) => (
-            <li key={person.name}>
-              {person.name} {person.number}
-            </li>
-          ))}
-      </ul>
-    </div>
-  );
-};
 
 const App = () => {
   const [persons, setPersons] = useState([
