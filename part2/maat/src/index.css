@@ -1,13 +1,34 @@
+/* Global Styles */
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  margin: 5px;
+  padding: 5px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: var(--clr-bcg);
+  line-height: 1.5;
+  font-size: 0.875rem;
+  transition: all 0.3s linear;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+* {
+  box-sizing: border-box;
+}
+
+/* Navbar */
+
+.btn {
+  background: var(--clr-primary);
+  color: var(--clr-bcg);
+  padding: 0.25rem 0.25rem;
+  border-radius: 5px;
+  border-color: transparent;
+  text-transform: capitalize;
+  transition: all 0.3s linear;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
 }
