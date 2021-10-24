@@ -22,7 +22,10 @@ const App = () => {
     if (names.includes(newPerson.name)) {
       alert(`${newPerson.name} is already added to the phonebook`);
     } else {
-      setPersons((persons) => [...persons, newPerson]);
+      axios
+      .post('http://localhost:3001/persons',newPerson)
+      .then(response => 
+        setPersons((persons) => [...persons, newPerson]));
     }
   };
 
