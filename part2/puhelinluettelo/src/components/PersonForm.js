@@ -1,4 +1,4 @@
-export const PersonForm = ({ setNewPerson, newPerson, addPerson }) => {
+const PersonForm = ({ setNewPerson, newPerson, addPerson }) => {
     return (
       <div>
         <form onSubmit={addPerson}>
@@ -26,3 +26,5 @@ export const PersonForm = ({ setNewPerson, newPerson, addPerson }) => {
       </div>
     );
   };
+
+  export default PersonForm;

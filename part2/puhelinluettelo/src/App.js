@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Filter } from "./components/Filter";
-import { PersonForm } from "./components/PersonForm";
-import { PersonsList } from "./components/PersonsList";
+import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
+import PersonsList from "./components/PersonsList";
 import personService from "./services/persons";
 import "./App.css";
 
@@ -28,6 +28,15 @@ const App = () => {
       .then((response) => setPersons((persons) => [...persons, newPerson]));
   };
 
+  const removePerson = (person) => {
+    const confirmDeletion = window.confirm(
+      `Poistetaanko ${person.name} luettelosta?`
+    );
+    if (confirmDeletion) {
+      personService.remove(person.id).then((people) => setPersons(people));
+    }
+  };
+
   return (
     <>
       <h2>Phonebook</h2>
@@ -46,7 +55,11 @@ const App = () => {
         </div>
       </div>
       <div>
-        <PersonsList persons={persons} newFilter={newFilter} />
+        <PersonsList
+          persons={persons}
+          newFilter={newFilter}
+          removePerson={removePerson}
+        />
       </div>
     </>
   );
