@@ -1,128 +1,27 @@
-// import React, { useState, useEffect } from "react";
-// import Filter from "./components/Filter";
-// import PersonForm from "./components/PersonForm";
-// import PersonsList from "./components/PersonsList";
-// import personService from "./services/persons";
-// import "./App.css";
-
-// const App = () => {
-//   const [persons, setPersons] = useState([]);
-//   const [newPerson, setNewPerson] = useState({ name: "", number: "" });
-//   const [newFilter, setNewFilter] = useState("");
-
-//   useEffect(() => {
-//     personService.getAll().then((initialPersons) => {
-//       setPersons(initialPersons);
-//     });
-//   }, []);
-
-// //   const addPerson = (event) => {
-// //     event.preventDefault();
-
-// //     const names = persons.map((person) => person.name.toLowerCase());
-// //     if (names.includes(newPerson.name.toLowerCase())) {
-// //       const confirmUpdate = window.confirm(
-// //         `${newPerson.name} is already added to the phonebook, replace the old number with the new one?`
-// //       );
-
-// //       if (confirmUpdate) {
-// //         const personWithSameName = persons.find(
-// //           (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
-// //         );
-// //         personService
-// //           .update(personWithSameName.id, newPerson)
-// //           .then((response) => setPersons(response.data));
-// //       }
-// //     } else {
-// //       personService
-// //         .create(newPerson)
-// //         .then((response) =>
-// //           setPersons((persons) => [...persons, response.data])
-// //         );
-// //     }
-// //   };
-
-// const addPerson = (event) => {
-//     event.preventDefault();
-
-//     const names = persons.map((person) => person.name.toLowerCase());
-//     if (names.includes(newPerson.name.toLowerCase())) {
-//       const confirmUpdate = window.confirm(
-//         `${newPerson.name} is already added to the phonebook, replace the old number with the new one?`
-//       );
-
-//       if (confirmUpdate) {
-//         const personWithSameName = persons.find(
-//           (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
-//         );
-//         personService
-//           .update(personWithSameName.id, newPerson)
-//           .then((response) => setPersons(response.data));
-//       }
-//     } else {
-//         personService
-//         .create(newPerson)
-//         .then((response) =>
-//           setPersons((persons) => [...persons, response.data])
-//         );
-//     }
-//   };
-
-//   const removePerson = (person) => {
-//     const confirmDeletion = window.confirm(
-//       `Poistetaanko ${person.name} luettelosta?`
-//     );
-//     if (confirmDeletion) {
-//       personService.remove(person.id).then((people) => setPersons(people));
-//     }
-//   };
-
-//   return (
-//     <>
-//       <h2>Phonebook</h2>
-//       <div>
-//         <div>
-//           <div>
-//             <Filter setNewFilter={setNewFilter} />
-//           </div>
-//           <div>
-//             <PersonForm
-//               setNewPerson={setNewPerson}
-//               newPerson={newPerson}
-//               addPerson={addPerson}
-//             />
-//           </div>
-//         </div>
-//       </div>
-//       <div>
-//         <PersonsList
-//           persons={persons}
-//           newFilter={newFilter}
-//           removePerson={removePerson}
-//         />
-//       </div>
-//     </>
-//   );
-// };
-
-// export default App;
-
 import React, { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import PersonsList from "./components/PersonsList";
 import personService from "./services/persons";
+import ErrorMessage from "./components/ErrorMessage";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newPerson, setNewPerson] = useState({ name: "", number: "" });
   const [newFilter, setNewFilter] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [notificationMessage, setNotificationMessage] = useState(null);
 
   useEffect(() => {
     personService.getAll().then((response) => {
       setPersons(response.data);
     });
-  }, []);
+  }, [persons]);
+
+  const refreshPage = () => {
+    window.location.reload(false);
+  };
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -130,7 +29,7 @@ const App = () => {
     const names = persons.map((person) => person.name.toLowerCase());
     if (names.includes(newPerson.name.toLowerCase())) {
       const confirmUpdate = window.confirm(
-        `${newPerson.name} is already added to the phonebook`
+        `${newPerson.name} is already added to the phonebook, do you want to change info?`
       );
 
       if (confirmUpdate) {
@@ -139,25 +38,66 @@ const App = () => {
         );
         personService
           .update(allreadyExists.id, newPerson)
-          .then((response) => setPersons(response.data));
+          .then((response) => setPersons(response.data))
+          .then((response) => {
+            setNotificationMessage(
+              `Person ${newPerson.name} contact info changed`
+            );
+            setTimeout(() => {
+              setNotificationMessage(null);
+            }, 4000);
+          })
+          .catch((error) => {
+            setErrorMessage("Error, could not handle");
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 4000);
+          });
       }
     } else {
       personService
         .create(newPerson)
         .then((response) =>
           setPersons((persons) => [...persons, response.data])
-        );
+        )
+        .then((response) => {
+          setNotificationMessage(`Person ${newPerson.name} added to phonebook`);
+          setTimeout(() => {
+            setNotificationMessage(null);
+          }, 4000);
+        })
+        .catch((error) => {
+          setErrorMessage("Error, could not handle 2");
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 4000);
+        });
     }
   };
 
   const removePerson = (person) => {
     const confirmDeletion = window.confirm(
-      `Poistetaanko ${person.name} luettelosta?`
+      `Do you want to delete ${person.name} from phonebook?`
     );
     if (confirmDeletion) {
       personService
         .remove(person.id)
-        .then((response) => setPersons(response.data));
+        .then((response) => setPersons(response.data))
+        .then((response) => {
+          setNotificationMessage(
+            `Person ${newPerson.name} deleted from phonebook`
+          );
+          setTimeout(() => {
+            setNotificationMessage(null);
+          }, 4000);
+        })
+        .catch((error) => {
+          setErrorMessage("Person already removed");
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 4000);
+        });
+      setTimeout(refreshPage, 3000);
     }
   };
 
@@ -165,6 +105,8 @@ const App = () => {
     <>
       <h2>Phonebook</h2>
       <div>
+        <ErrorMessage errorMessage={errorMessage} />
+        <Notification notificationMessage={notificationMessage} />
         <div>
           <div>
             <Filter setNewFilter={setNewFilter} />
@@ -185,6 +127,7 @@ const App = () => {
           removePerson={removePerson}
         />
       </div>
+      <div></div>
     </>
   );
 };
