@@ -1,13 +1,8 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
-      "id": 1
-    },
-    {
       "name": "Ada Lovelace",
-      "number": "39-44-5323523",
+      "number": "045-232555522-12",
       "id": 2
     },
     {
@@ -21,14 +16,9 @@
       "id": 4
     },
     {
-      "name": "simo",
-      "number": "3434343",
+      "name": "Kalle Juurela",
+      "number": "045-67232255",
       "id": 5
-    },
-    {
-      "name": "asko",
-      "number": "045-343434",
-      "id": 6
     }
   ]
 }

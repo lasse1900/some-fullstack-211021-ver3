@@ -1,7 +1,11 @@
-const PersonsList = ({ persons, newFilter, removePerson }) => {
+const PhonebookList = ({persons, newFilter, removePerson}) => {
+
+  if (!persons.length) {
+    return <></>;
+  }
+
   return (
     <div>
-      <h2>Numbers</h2>
       <ul>
         {persons
           .filter((person) =>
@@ -18,4 +22,4 @@ const PersonsList = ({ persons, newFilter, removePerson }) => {
   );
 };
 
-export default PersonsList;
+export default PhonebookList;

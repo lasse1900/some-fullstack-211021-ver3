@@ -2,8 +2,7 @@ import axios from "axios";
 const baseUrl = "http://localhost:3001/persons";
 
 const getAll = () => {
-  const request = axios.get(baseUrl);
-  return request.then((response) => response.data);
+  return axios.get(baseUrl);
 };
 
 const create = (newPerson) => {
@@ -15,5 +14,15 @@ const remove = (id) => {
   return request.then(() => getAll().then((people) => people));
 };
 
+const update = (id, newObject) => {
+  const request = axios.put(`${baseUrl}/${id}`, newObject);
+  return request.then(() => getAll().then((people) => people));
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, create, remove };
+export default {
+  getAll,
+  create,
+  update,
+  remove,
+};
