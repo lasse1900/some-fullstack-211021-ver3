@@ -17,7 +17,7 @@ const App = () => {
     personService.getAll().then((response) => {
       setPersons(response.data);
     });
-  }, [persons]);
+  }, []);
 
   const refreshPage = () => {
     window.location.reload(false);
