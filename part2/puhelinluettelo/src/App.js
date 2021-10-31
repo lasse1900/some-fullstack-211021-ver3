@@ -48,7 +48,7 @@ const App = () => {
             }, 4000);
           })
           .catch((error) => {
-            setErrorMessage("Error, could not handle");
+            setErrorMessage("Error, please check the input .", error);
             setTimeout(() => {
               setErrorMessage(null);
             }, 4000);
@@ -67,12 +67,13 @@ const App = () => {
           }, 4000);
         })
         .catch((error) => {
-          setErrorMessage("Error, could not handle 2");
+          setErrorMessage("Error, please check the input ..", error);
           setTimeout(() => {
             setErrorMessage(null);
           }, 4000);
         });
     }
+    setTimeout(refreshPage, 3000);
   };
 
   const removePerson = (person) => {
@@ -85,7 +86,7 @@ const App = () => {
         .then((response) => setPersons(response.data))
         .then((response) => {
           setNotificationMessage(
-            `Person ${newPerson.name} deleted from phonebook`
+            `Person ${person.name} deleted from phonebook`
           );
           setTimeout(() => {
             setNotificationMessage(null);
@@ -93,6 +94,7 @@ const App = () => {
         })
         .catch((error) => {
           setErrorMessage("Person already removed");
+          console.log(error.response.data)
           setTimeout(() => {
             setErrorMessage(null);
           }, 4000);
