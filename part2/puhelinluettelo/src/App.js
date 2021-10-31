@@ -105,7 +105,7 @@ const App = () => {
 
   return (
     <>
-      <h2>Phonebook</h2>
+      <h2>New Phonebook</h2>
       <div>
         <ErrorMessage errorMessage={errorMessage} />
         <Notification notificationMessage={notificationMessage} />
