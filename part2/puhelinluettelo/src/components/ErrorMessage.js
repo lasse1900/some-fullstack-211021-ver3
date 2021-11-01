@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ErrorMessage = ({ errorMessage }) => {
+const ErrorMsg = ({ errorMessage }) => {
   if (errorMessage === null) {
     return null
   }
@@ -11,4 +11,4 @@ const ErrorMessage = ({ errorMessage }) => {
   )
 }
 
-export default ErrorMessage;
+export default ErrorMsg;

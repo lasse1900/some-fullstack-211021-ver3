@@ -1,21 +1,41 @@
 import React, { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
-import PersonsList from "./components/PersonsList";
 import personService from "./services/persons";
 import ErrorMessage from "./components/ErrorMessage";
 import Notification from "./components/Notification";
+import AddForm from "./components/AddForm";
+import './App.css';
+
+const Persons = ({ persons, removePerson, changeNumber }) => {
+  return (
+    <div>
+      {persons.map(person =>
+        <PersonForm
+          key={person.id}
+          id={person.id}
+          name={person.name}
+          number={person.number}
+          removePerson={removePerson}
+          changeNumber={changeNumber}
+        />)}
+    </div>
+  )
+};
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  const [newPerson, setNewPerson] = useState({ name: "", number: "" });
+  const [newName, setNewName] = useState('');
+  const [newNumber, setNewNumber] = useState('');
   const [newFilter, setNewFilter] = useState("");
+  const [filteredList, setFilteredList] = useState(persons);
   const [errorMessage, setErrorMessage] = useState(null);
   const [notificationMessage, setNotificationMessage] = useState(null);
 
   useEffect(() => {
-    personService.getAll().then((response) => {
-      setPersons(response.data);
+    personService.getAll().then((initialPersons) => {
+      setPersons(initialPersons);
+      setFilteredList(initialPersons);
     });
   }, []);
 
@@ -23,57 +43,63 @@ const App = () => {
     window.location.reload(false);
   };
 
+  const handleFilter = (event) => {
+    setNewFilter(event.target.value);
+    setFilteredList(
+      persons.filter((person) =>
+        person.name.toLowerCase().includes(event.target.value.toLowerCase())
+      )
+    );
+  };
+
+  const nameChange = event => { setNewName(event.target.value) };
+  const numberChange = event => { setNewNumber(event.target.value) };
+
   const addPerson = (event) => {
     event.preventDefault();
+    const name = newName;
+    const number = newNumber;
 
-    const names = persons.map((person) => person.name.toLowerCase());
-    if (names.includes(newPerson.name.toLowerCase())) {
-      const confirmUpdate = window.confirm(
-        `${newPerson.name} is already added to the phonebook, do you want to change info?`
-      );
-
-      if (confirmUpdate) {
-        const allreadyExists = persons.find(
-          (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
-        );
+    if (persons.map(person => person.name.toLowerCase()).includes(name.toLocaleLowerCase())) {
+      if (window.confirm(`${name} is already added to the phonebook, do you want to change info?`)) {
+        const id = persons.filter(person => person.name === name)[0].id;
+        const personObject = {
+          id: id,
+          name: name,
+          number: number
+        };
         personService
-          .update(allreadyExists.id, newPerson)
-          .then((response) => setPersons(response.data))
-          .then((response) => {
-            setNotificationMessage(
-              `Person ${newPerson.name} contact info changed`
-            );
-            setTimeout(() => {
-              setNotificationMessage(null);
-            }, 4000);
+          .update(id, personObject)
+          .then(updatePerson => {
+            setPersons(persons.map(person => person.id !== id ? person : updatePerson));
+            setFilteredList(persons.map(person => person.id !== id ? person : updatePerson));
+            setNewFilter('');
+            setNotificationMessage(`Person ${name} contact info changed`)
+            setTimeout(() => { setNotificationMessage(null) }, 4000);
           })
-          .catch((error) => {
-            setErrorMessage("Error, please check the input .", error);
-            setTimeout(() => {
-              setErrorMessage(null);
-            }, 4000);
+          .catch(error => {
+            setErrorMessage(error.response.data.error)
+            setTimeout(() => { setErrorMessage(null) }, 4000);
           });
       }
+      setNewName('');
+      setNewNumber('');
     } else {
+      const personObject = { name, number };
       personService
-        .create(newPerson)
-        .then((response) =>
-          setPersons((persons) => [...persons, response.data])
-        )
-        .then((response) => {
-          setNotificationMessage(`Person ${newPerson.name} added to phonebook`);
-          setTimeout(() => {
-            setNotificationMessage(null);
-          }, 4000);
+        .create(personObject)
+        .then(returnedPerson => {
+          setFilteredList(persons.concat(returnedPerson));
+          setPersons(persons.concat(returnedPerson));
+          setNotificationMessage(`Person ${name} added to phonebook`)
+          setTimeout(() => { setNotificationMessage(null) }, 4000)
+        }).catch(error => {
+          setErrorMessage(error.response.data.error)
+          setTimeout(() => { setErrorMessage(null) }, 4000);
         })
-        .catch((error) => {
-          setErrorMessage("Error, please check the input ..", error);
-          setTimeout(() => {
-            setErrorMessage(null);
-          }, 4000);
-        });
+      setNewName('')
+      setNewNumber('')
     }
-    setTimeout(refreshPage, 3000);
   };
 
   const removePerson = (person) => {
@@ -109,23 +135,23 @@ const App = () => {
       <div>
         <ErrorMessage errorMessage={errorMessage} />
         <Notification notificationMessage={notificationMessage} />
+        <Filter newFilter={newFilter} handleFilter={handleFilter} />
         <div>
           <div>
-            <Filter setNewFilter={setNewFilter} />
-          </div>
-          <div>
-            <PersonForm
-              setNewPerson={setNewPerson}
-              newPerson={newPerson}
+            <AddForm
               addPerson={addPerson}
+              newName={newName}
+              newNumber={newNumber}
+              nameChange={nameChange}
+              numberChange={numberChange}
             />
           </div>
         </div>
       </div>
       <div>
-        <PersonsList
-          persons={persons}
-          newFilter={newFilter}
+        <br />
+        <Persons
+          persons={filteredList}
           removePerson={removePerson}
         />
       </div>
