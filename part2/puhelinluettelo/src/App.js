@@ -44,7 +44,7 @@ const App = () => {
     const name = newName;
     const number = newNumber;
 
-    if (persons.map(person => person.name.toLowerCase()).includes(name.toLocaleLowerCase())) {
+    if (persons.map(person => person.name).includes(name)) {
       if (window.confirm(`${name} is already added to the phonebook, do you want to change info?`)) {
         const id = persons.filter(person => person.name === name)[0].id;
         const personObject = {
