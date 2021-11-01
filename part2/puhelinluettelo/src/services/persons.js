@@ -1,5 +1,6 @@
 import axios from "axios";
 // const baseUrl = "http://localhost:3001/api/persons";
+// for debug use directly to Mongo Atlas
 // const baseUrl = "https://phonebook-lk.herokuapp.com/api/persons";
 const baseUrl = "/api/persons";
 
@@ -15,12 +16,12 @@ const create = (newPerson) => {
 
 const remove = (id) => {
   const request = axios.delete(`${baseUrl}/${id}`);
-  return request.then(() => getAll().then((people) => people));
+  return request.then(response => response.data)
 };
 
 const update = (id, newObject) => {
   const request = axios.put(`${baseUrl}/${id}`, newObject);
-  return request.then(() => getAll().then((people) => people));
+  return request.then(response => response.data)
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export

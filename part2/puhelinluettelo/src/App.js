@@ -1,27 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Filter from "./components/Filter";
-import PersonForm from "./components/PersonForm";
 import personService from "./services/persons";
 import ErrorMessage from "./components/ErrorMessage";
 import Notification from "./components/Notification";
 import AddForm from "./components/AddForm";
-import './App.css';
-
-const Persons = ({ persons, removePerson, changeNumber }) => {
-  return (
-    <div>
-      {persons.map(person =>
-        <PersonForm
-          key={person.id}
-          id={person.id}
-          name={person.name}
-          number={person.number}
-          removePerson={removePerson}
-          changeNumber={changeNumber}
-        />)}
-    </div>
-  )
-};
+import PersonsList from "./components/PersonsList";
+import "./App.css";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -150,10 +134,7 @@ const App = () => {
       </div>
       <div>
         <br />
-        <Persons
-          persons={filteredList}
-          removePerson={removePerson}
-        />
+        <PersonsList persons={filteredList} removePerson={removePerson} />
       </div>
       <div></div>
     </>
