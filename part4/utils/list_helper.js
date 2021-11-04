@@ -32,20 +32,26 @@ const favoriteWriter = (blogs) => {
   return blogs.length === 0 ? null : blogs.reduce(reducer, blogs[0])
 }
 
-const mostBlogs = blogs => {
-  if (blogs.length === 0) return null
+const mostBlogs = (blogs) => {
+  const getAllAuthors = _.countBy(blogs, function(o) { return o.author })
+  const authorName = _.maxBy(_.keys(getAllAuthors), function (o) { return getAllAuthors[o] })
+  const authorWithNumberOfBlog = _.pick(getAllAuthors,authorName)
+  var author = {}
+  author['author'] = authorName
+  author['blogs'] = authorWithNumberOfBlog[authorName]
+  return author
+}
 
-  const authorBlogsArray = _.chain(_.map(blogs, 'author'))
-    .countBy()
-    .toPairs()
-    .maxBy(_.last)
-    .value()
-
-  const authorWithMostBlogs = {
-    author: authorBlogsArray[0],
-  }
-
-  return authorWithMostBlogs
+const mostLikes = (blogs) => {
+  const authorWithLikes = _(blogs)
+    .groupBy('author')
+    .map(function(group, author) {
+      return {
+        author: author,
+        likes: _.sum(_.map(group, 'likes'))
+      }
+    }).value()
+  return _.maxBy(authorWithLikes, 'likes')
 }
 
 module.exports = {
@@ -53,5 +59,6 @@ module.exports = {
   totalLikes,
   favoriteBlog,
   favoriteWriter,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
