@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
-const helper = require('./test_helper')
+// const helper = require('./test_helper')
 const app = require('../app')
 
 const api = supertest(app)
@@ -28,77 +28,85 @@ beforeEach(async () => {
   await blogObject.save()
 })
 
-test('blogs are returned as json', async () => {
-  await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
+describe('blogs are returned as json', () => {
+  test('blogs are returned as json', async () => {
+    await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  })
 })
 
-test('there are two blogs', async () => {
-  const response = await api.get('/api/blogs')
+describe('basic tests', () => {
+  test('there are two blogs', async () => {
+    const response = await api.get('/api/blogs')
 
-  expect(response.body).toHaveLength(initialBlogs.length)
+    expect(response.body).toHaveLength(initialBlogs.length)
+  })
+
+  test('the first blog is about: HTML is easy', async () => {
+    const response = await api.get('/api/blogs')
+
+    expect(response.body[0].title).toBe('HTML is easy')
+  })
+
+  test('blogs should have id instead of _id ', async () => {
+    const response = await api.get('/api/blogs')
+
+    expect(response.body[0].id).toBeDefined()
+  })
 })
 
-test('the first blog is about: HTML is easy', async () => {
-  const response = await api.get('/api/blogs')
-
-  expect(response.body[0].title).toBe('HTML is easy')
-})
-
-test('blogs should have id instead of _id ', async () => {
-  const response = await api.get('/api/blogs')
-
-  expect(response.body[0].id).toBeDefined()
-})
-
-test('a valid Blog can be added ', async () => {
-  const newBlog = {
-    title: 'async/await simplifies making async calls',
-    author: 'Lasse',
-    url: 'https://www.google.fi',
-    likes: 5,
-  }
-
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-
-  const response = await api.get('/api/blogs')
-
-  const contents = response.body.map((r) => r.title)
-
-  expect(response.body).toHaveLength(initialBlogs.length + 1)
-  expect(contents).toContain('async/await simplifies making async calls')
-})
-
-test('pass with status code 200 if likes is missing', async () => {
-  await api
-    .post('/api/blogs')
-    .send({
-      title: 'I pHone',
+describe('Valid Blog can be added ', () => {
+  test('a valid Blog can be added ', async () => {
+    const newBlog = {
+      title: 'async/await simplifies making async calls',
       author: 'Lasse',
-      url: 'https://www.apple.com'
-    })
-    .expect(200)
+      url: 'https://www.google.fi',
+      likes: 5,
+    }
 
-  const response = await api.get('/api/blogs')
-  expect(response.body).toHaveLength(initialBlogs.length + 1)
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+
+    const contents = response.body.map((r) => r.title)
+
+    expect(response.body).toHaveLength(initialBlogs.length + 1)
+    expect(contents).toContain('async/await simplifies making async calls')
+  })
 })
 
-test('fails with status code 400 if data is invalid', async () => {
-  await api
-    .post('/api/blogs')
-    .send({
-      author: 'Lasse',
-    })
-    .expect(400)
+describe('testing invalid inputs', () => {
+  test('pass with status code 200 if likes is missing', async () => {
+    await api
+      .post('/api/blogs')
+      .send({
+        title: 'I pHone',
+        author: 'Lasse',
+        url: 'https://www.apple.com',
+      })
+      .expect(200)
 
-  const response = await api.get('/api/blogs')
-  expect(response.body).toHaveLength(initialBlogs.length)
+    const response = await api.get('/api/blogs')
+    expect(response.body).toHaveLength(initialBlogs.length + 1)
+  })
+
+  test('fails with status code 400 if data is invalid', async () => {
+    await api
+      .post('/api/blogs')
+      .send({
+        author: 'Lasse',
+      })
+      .expect(400)
+
+    const response = await api.get('/api/blogs')
+    expect(response.body).toHaveLength(initialBlogs.length)
+  })
 })
 
 afterAll(() => {
