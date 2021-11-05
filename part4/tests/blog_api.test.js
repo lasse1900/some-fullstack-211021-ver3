@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const helper = require('./test_helper')
 const app = require('../app')
 
 const api = supertest(app)
@@ -50,6 +51,30 @@ test('blogs should have "id" instead of "_id"', async () => {
   const response = await api.get('/api/blogs')
 
   expect(response.body[0].id).toBeDefined()
+})
+
+test('a valid Blog can be added ', async () => {
+  const newBlog = {
+    title: 'async/await simplifies making async calls',
+    author: 'Lasse',
+    url: 'https://www.google.fi',
+    likes: 5
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+
+  const contents = response.body.map(r => r.title)
+
+  expect(response.body).toHaveLength(initialBlogs.length + 1)
+  expect(contents).toContain(
+    'async/await simplifies making async calls'
+  )
 })
 
 afterAll(() => {
