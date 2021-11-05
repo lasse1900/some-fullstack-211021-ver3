@@ -130,3 +130,31 @@ describe('Blog can be deleted', () => {
     expect(contents).not.toContain(blogToDelete.title)
   })
 })
+
+// this should be refactored
+describe('Blog can be edited', () => {
+  test('a blog can be edited ', async () => {
+
+    const response = await api.get('/api/blogs')
+    const blogId = response.body[0].id
+    const blogTitle = response.body[0].title
+    console.log('title: ', blogTitle)
+
+    const blogToBeEdited = {
+      likes: 15,
+    }
+
+    await api
+      .put(`/api/blogs/${blogId}`)
+      .send(blogToBeEdited)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const newResponse = await api.get('/api/blogs')
+
+    const contents = newResponse.body.map((r) => r.likes)
+    expect(contents).toContain(15)
+    const contents2 = newResponse.body.map((r) => r.title)
+    expect(contents2).toContain('HTML is easy')
+  })
+})
