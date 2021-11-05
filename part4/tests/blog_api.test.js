@@ -46,6 +46,12 @@ test('the first blog is about: HTML is easy', async () => {
   expect(response.body[0].title).toBe('HTML is easy')
 })
 
+test('blogs should have "id" instead of "_id"', async () => {
+  const response = await api.get('/api/blogs')
+
+  expect(response.body[0].id).toBeDefined()
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
