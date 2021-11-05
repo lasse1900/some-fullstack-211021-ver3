@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
-// const helper = require('./test_helper')
+const helper = require('./test_helper')
 const app = require('../app')
 
 const api = supertest(app)
@@ -111,4 +111,22 @@ describe('testing invalid inputs', () => {
 
 afterAll(() => {
   mongoose.connection.close()
+})
+
+describe('Blog can be deleted', () => {
+  test('a blog can be deleted', async () => {
+    const response = await api.get('/api/blogs')
+    const blogToDelete = response.body[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    expect(blogsAtEnd).toHaveLength(initialBlogs.length - 1)
+
+    const contents = blogsAtEnd.map(r => r.title)
+    expect(contents).not.toContain(blogToDelete.title)
+  })
 })
