@@ -47,7 +47,7 @@ test('the first blog is about: HTML is easy', async () => {
   expect(response.body[0].title).toBe('HTML is easy')
 })
 
-test('blogs should have "id" instead of "_id"', async () => {
+test('blogs should have id instead of _id ', async () => {
   const response = await api.get('/api/blogs')
 
   expect(response.body[0].id).toBeDefined()
@@ -58,7 +58,7 @@ test('a valid Blog can be added ', async () => {
     title: 'async/await simplifies making async calls',
     author: 'Lasse',
     url: 'https://www.google.fi',
-    likes: 5
+    likes: 5,
   }
 
   await api
@@ -69,12 +69,36 @@ test('a valid Blog can be added ', async () => {
 
   const response = await api.get('/api/blogs')
 
-  const contents = response.body.map(r => r.title)
+  const contents = response.body.map((r) => r.title)
 
   expect(response.body).toHaveLength(initialBlogs.length + 1)
-  expect(contents).toContain(
-    'async/await simplifies making async calls'
-  )
+  expect(contents).toContain('async/await simplifies making async calls')
+})
+
+test('pass with status code 200 if likes is missing', async () => {
+  await api
+    .post('/api/blogs')
+    .send({
+      title: 'I pHone',
+      author: 'Lasse',
+      url: 'https://www.apple.com'
+    })
+    .expect(200)
+
+  const response = await api.get('/api/blogs')
+  expect(response.body).toHaveLength(initialBlogs.length + 1)
+})
+
+test('fails with status code 400 if data is invalid', async () => {
+  await api
+    .post('/api/blogs')
+    .send({
+      author: 'Lasse',
+    })
+    .expect(400)
+
+  const response = await api.get('/api/blogs')
+  expect(response.body).toHaveLength(initialBlogs.length)
 })
 
 afterAll(() => {
