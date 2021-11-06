@@ -1,0 +1,9 @@
+PUT http://localhost:3001/api/blogs/61854f0287128139b2d7183e
+Content-Type: application/json
+
+  {
+    "title": "CSS is hard",
+    "author": "Lasse",
+    "url": "https://www.apple.com",
+    "likes": 52
+  }
