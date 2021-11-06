@@ -137,8 +137,6 @@ describe('Blog can be edited', () => {
 
     const response = await api.get('/api/blogs')
     const blogId = response.body[0].id
-    const blogTitle = response.body[0].title
-    console.log('title: ', blogTitle)
 
     const blogToBeEdited = {
       likes: 15,
