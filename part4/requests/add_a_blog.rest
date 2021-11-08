@@ -1,9 +1,11 @@
 POST http://localhost:3001/api/blogs/ 
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlBhYXZvIGpyIiwiaWQiOiI2MTg4ZjgwMmNlOTE2YzJkZGUxOWE2NDMiLCJpYXQiOjE2MzYzNzU1OTB9.818qXzzb6X1ADOds-yUKgAm__BDalojhDqojHtYZCG4
 
 { 
-    "title": "Mac Book 2017", 
-    "author": "Lasse",
+    "title": "Mac Prp M1", 
+    "author": "Paavo jr",
     "url": "https://www.apple.com", 
-    "likes": 1
+    "likes": 1,
+    "userId": "6188f802ce916c2dde19a643"
 }
