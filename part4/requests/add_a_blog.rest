@@ -1,11 +1,10 @@
 POST http://localhost:3001/api/blogs/ 
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlBhYXZvIGpyIiwiaWQiOiI2MTg4ZjgwMmNlOTE2YzJkZGUxOWE2NDMiLCJpYXQiOjE2MzYzNzU1OTB9.818qXzzb6X1ADOds-yUKgAm__BDalojhDqojHtYZCG4
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImthbGxlIiwiaWQiOiI2MTg5MjgyZmFhYjdiZjU4NTNjZWYwODMiLCJpYXQiOjE2MzYzNzg2ODJ9.IT3EcHRHg9qwicYfZDCh3hMBHyt87Oq572Jnxva-2-Y
 
 { 
-    "title": "Mac Prp M1", 
-    "author": "Paavo jr",
-    "url": "https://www.apple.com", 
-    "likes": 1,
-    "userId": "6188f802ce916c2dde19a643"
+    "title": "ÅIFK", 
+    "author": "kalle",
+    "url": "https://www.apple.com",
+    "likes": 1
 }

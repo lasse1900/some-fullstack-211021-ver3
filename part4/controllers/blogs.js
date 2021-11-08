@@ -30,14 +30,14 @@ blogsRouter.post('/', async (request, response, next) => {
     if (!body.title || !body.author || !body.url)
       return response.status(400).end()
 
-    const user = await User.findById(body.userId)
+    const user = await User.findById(decodedToken.id)
 
     const blog = new Blog({
       title: body.title,
       author: body.author,
       url: body.url,
-      likes: body.likes || 0,
-      user: body.userId,
+      likes: typeof body.likes === 'undefined' ? 0 : body.likes,
+      user: user._id,
     })
 
     const savedBlog = await blog.save()
