@@ -3,3 +3,5 @@ PORT=3001
 
 TEST_MONGODB_URI = `mongodb+srv://fullstack:${password}@cluster0.itz0t.mongodb.net/blog-test?retryWrites=true`;
 PORT=3001
+
+SECRET=
