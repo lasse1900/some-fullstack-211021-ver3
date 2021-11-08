@@ -1,9 +1,9 @@
 POST http://localhost:3001/api/blogs/ 
 Content-Type: application/json
 
-{
-"title": "Mac Book 2017", 
-"author": "Lasse", 
-"url": "https://www.home/posttal", 
-"likes": 1
+{ 
+    "title": "Mac Book 2017", 
+    "author": "Lasse",
+    "url": "https://www.apple.com", 
+    "likes": 1
 }
