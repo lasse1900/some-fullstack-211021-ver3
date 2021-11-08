@@ -50,8 +50,22 @@ blogsRouter.post('/', async (request, response, next) => {
 })
 
 blogsRouter.delete('/:id', async (request, response, next) => {
-  await Blog.findByIdAndRemove(request.params.id).catch((error) => next(error))
-  response.status(204).end()
+  try {
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    if (!request.token || !decodedToken.id) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    } else {
+      const blogRemoved = await Blog.findById(request.params.id)
+      if (blogRemoved.user.toString() === decodedToken.id.toString()) {
+        const result = await Blog.findByIdAndRemove(request.params.id)
+        response.status(204).json(result)
+      } else {
+        response.status(400).send({ error: 'allowed only to remove own blogs' })
+      }
+    }
+  } catch (exception) {
+    next(exception)
+  }
 })
 
 blogsRouter.put('/:id', async (request, response, next) => {
