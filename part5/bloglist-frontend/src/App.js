@@ -1,62 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
-import Notification from './components/Notification'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [author, setAuthor] = useState('')
-  const [title, setTitle] = useState('')
-  const [url, setUrl] = useState('')
-
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    try {
-      const user = await loginService.login({
-        username, password,
-      })
-
-      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
-    } catch (exception) {
-      setErrorMessage('käyttäjätunnus tai salasana virheellinen')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    }
-  }
-
-  const handleLogout = async (event) => {
-    window.localStorage.removeItem('loggedBlogappUser')
-  }
+  const [notification, setNotification] = useState({})
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
     )
   }, [])
-
-  const addBlog = async event => {
-    event.preventDefault()
-    let blogObject = {}
-    for (const input of event.target.querySelectorAll('input')) {
-      blogObject[input.name] = input.value
-    }
-
-    const blog = await blogService.create(blogObject)
-    setBlogs(blogs.concat(blog))
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-  }
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -67,10 +27,40 @@ const App = () => {
     }
   }, [])
 
+  const alert = (message, error) => {
+    setNotification({ message, error })
+    setTimeout(() => { setNotification({}) }, 4000);
+  }
+
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    try {
+      const user = await loginService.login({
+        username, password,
+      })
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+      setUser(user)
+      setUsername('')
+      setPassword('')
+      blogService.setToken(user.token)
+      alert(`${username} logged in`)
+    } catch (exception) {
+      console.log('käyttäjätunnus tai salasana virheellinen')
+      alert(`${exception.response.data.error}`)
+    }
+  }
+
+  const handleLogout = async (event) => {
+    window.localStorage.removeItem('loggedBlogappUser')
+    alert(`${user.username} logged out`)
+    setUser(null)
+  }
+
   if (user === null) {
     return (
       <div>
         <h2>Please log in to App</h2>
+        <Notification notification={notification} />
         <form onSubmit={handleLogin}>
           <div>
             käyttäjätunnus
@@ -97,46 +87,15 @@ const App = () => {
   }
   return (
     <div>
-      <p>Logged in as {user.name}</p>
-      <Notification message={errorMessage} />
       <h2>Blogs</h2>
-      <form onSubmit={handleLogout}>
-        <button type='submit'>logout</button>
-      </form>
-      <h2>Add a New Blog</h2>
-      <div>
-        <form onSubmit={event => addBlog(event)}>
-          <div>
-            title:
-          <input
-              type='text'
-              name='title'
-              value={title}
-              onChange={({ target }) => setTitle(target.value)}
-            />
-          </div>
-          <div>
-            author:
-          <input
-              type='text'
-              name='author'
-              value={author}
-              onChange={({ target }) => setAuthor(target.value)}
-            />
-          </div>
-          <div>
-            url:
-          <input
-              type='text'
-              name='url'
-              value={url}
-              onChange={({ target }) => setUrl(target.value)}
-            />
-          </div>
-          <button type='submit'>create</button>
-        </form>
-      </div>
+      <Notification notification={notification} />
+      <p>Logged in as {user.name}</p>
+      <button onClick={() => handleLogout()}>logout</button>
       <br></br>
+      <br></br>
+      <BlogForm blogs={blogs} setBlogs={setBlogs}
+        alert={alert}
+      />
       {blogs.map(blog => (
         <Blog key={blog.id} blog={blog} />
       ))}
