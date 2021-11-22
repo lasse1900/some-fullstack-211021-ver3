@@ -4,6 +4,7 @@ import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import InfoMessage from './components/InfoMessage'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,6 +12,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState({})
+  const [infoMessage, setInfoMessage] = useState({})
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -32,6 +34,18 @@ const App = () => {
     setTimeout(() => { setNotification({}) }, 4000);
   }
 
+  const setInfo = (message, error) => {
+    console.log('SET INFO')
+    setInfoMessage({ message, error })
+    console.log('Set InfoMessage', message)
+    setTimeout(() => { setInfoMessage({}) }, 4000);
+  }
+
+  const notify = (message, error) => {
+    setNotification({ message, error })
+    setTimeout(() => { setNotification({}) }, 4000);
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -40,19 +54,20 @@ const App = () => {
       })
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       setUser(user)
+      setInfo(`${username} logged in`)
       setUsername('')
       setPassword('')
       blogService.setToken(user.token)
-      alert(`${username} logged in`)
     } catch (exception) {
       console.log('käyttäjätunnus tai salasana virheellinen')
+      alert(`${username} loggin failed`)
       alert(`${exception.response.data.error}`)
     }
   }
 
   const handleLogout = async (event) => {
     window.localStorage.removeItem('loggedBlogappUser')
-    alert(`${user.username} logged out`)
+    setInfo(`${user.username} logged out`)
     setUser(null)
   }
 
@@ -61,6 +76,7 @@ const App = () => {
       <div>
         <h2>Please log in to App</h2>
         <Notification notification={notification} />
+        <InfoMessage infoMessage={infoMessage}/>
         <form onSubmit={handleLogin}>
           <div>
             käyttäjätunnus
@@ -93,8 +109,7 @@ const App = () => {
       <button onClick={() => handleLogout()}>logout</button>
       <br></br>
       <br></br>
-      <BlogForm blogs={blogs} setBlogs={setBlogs}
-        alert={alert}
+      <BlogForm blogs={blogs} setBlogs={setBlogs} notify={notify}
       />
       {blogs.map(blog => (
         <Blog key={blog.id} blog={blog} />
