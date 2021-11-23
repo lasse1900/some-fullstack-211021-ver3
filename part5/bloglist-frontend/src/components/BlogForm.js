@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import blogService from "../services/blogs";
 
-const BlogForm = ({ blogs, setBlogs, notify, user }) => {
+const BlogForm = ({ blogs, setBlogs, notify, user, addBlogActivateButton }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
@@ -9,6 +9,7 @@ const BlogForm = ({ blogs, setBlogs, notify, user }) => {
   const addBlog = async (event) => {
     try {
       event.preventDefault();
+      console.log('addBlogActivateButton', addBlogActivateButton)
       let blogObject = {};
       for (const input of event.target.querySelectorAll("input")) {
         blogObject[input.name] = input.value;
