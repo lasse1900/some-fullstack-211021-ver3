@@ -13,7 +13,6 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [notification, setNotification] = useState({});
-  const [addBlogActivateButton, setAddBlogActivateButton] = useState(true);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -64,7 +63,6 @@ const App = () => {
   const handleLogout = async (event) => {
     window.localStorage.removeItem("loggedBlogappUser");
     setUser(null);
-    setAddBlogActivateButton(true)
   };
 
   const loginForm = () => (
@@ -92,15 +90,19 @@ const App = () => {
           </div>
           <button onClick={() => handleLogout()}>logout</button>
           <br></br>
-          <br></br>
-          <BlogForm blogs={blogs} setBlogs={setBlogs} notify={notify} user={user} addBlogActivateButton={addBlogActivateButton}/>
+          <BlogForm
+            blogs={blogs}
+            setBlogs={setBlogs}
+            notify={notify}
+            user={user}
+          />
         </div>
       )}
       <div>
-      <br></br>
-          {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
-          ))}
+        <br></br>
+        {blogs.map((blog) => (
+          <Blog key={blog.id} blog={blog} />
+        ))}
       </div>
     </div>
   );
