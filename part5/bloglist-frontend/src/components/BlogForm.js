@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import blogService from "../services/blogs";
 
-const BlogForm = ({ blogs, setBlogs, notify }) => {
+const BlogForm = ({ blogs, setBlogs, notify, user }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
@@ -13,18 +13,17 @@ const BlogForm = ({ blogs, setBlogs, notify }) => {
       for (const input of event.target.querySelectorAll("input")) {
         blogObject[input.name] = input.value;
       }
-  
+
       const blog = await blogService.create(blogObject);
       setBlogs(blogs.concat(blog));
-      notify(`Added a new blog: ${blog.title}`, true)
+      notify(`Added a new blog: ${blog.title}`, true);
       setTitle("");
       setAuthor("");
       setUrl("");
-      console.log('Blog added')
+      console.log("Blog added");
     } catch (error) {
-      notify(`${error.response.data.error}`, false)
+      notify(`${error.response.data.error}`, false);
     }
-
   };
 
   return (
@@ -58,7 +57,8 @@ const BlogForm = ({ blogs, setBlogs, notify }) => {
           />
         </div>
         <br></br>
-        <button type="submit">create</button>
+        {user === null ? <div></div> : <button type="submit">create</button>}
+        <br></br>
       </form>
     </div>
   );
