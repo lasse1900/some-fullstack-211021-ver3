@@ -86,9 +86,9 @@ const App = () => {
       ) : (
         <div>
           <div style={{ color: "green", fontSize: "24px" }}>
-            Logged in as {user.name}
+            Logged in as {user.name}{" "}
+            <button onClick={() => handleLogout()}>logout</button>
           </div>
-          <button onClick={() => handleLogout()}>logout</button>
           <br></br>
           <BlogForm
             blogs={blogs}
