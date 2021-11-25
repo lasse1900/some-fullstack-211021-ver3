@@ -21,6 +21,7 @@ const BlogForm = ({ blogs, setBlogs, notify }) => {
       setTitle("");
       setAuthor("");
       setUrl("");
+      setState(!state);
       console.log("Blog added");
     } catch (error) {
       notify(`${error.response.data.error}`, false);
@@ -33,7 +34,7 @@ const BlogForm = ({ blogs, setBlogs, notify }) => {
 
   return (
     <div>
-      <div style={{ display: state ? "none" : null }}>
+      <div style={{ display: state ? null : "none" }}>
         <form onSubmit={(event) => addBlog(event)}>
           <div>
             title:
@@ -71,7 +72,7 @@ const BlogForm = ({ blogs, setBlogs, notify }) => {
         onClick={toggle}
         className={"toggle--button" + (state ? "toggle--close" : "")}
       >
-        {state ? "create new blog" : "cancel"}
+        {state ? "cancel" : "create new blog"}
       </button>
     </div>
   );
