@@ -16,16 +16,16 @@ const Blog = ({ blog }) => {
     setHidden(!hidden);
   };
 
-  // const refreshPage = () => {
-  //   window.location.reload(false);
-  // };
+  const refreshPage = () => {
+    window.location.reload(false);
+  };
 
   const like = async () => {
     blog.likes += 1;
     try {
       blogAddition.update(blog.id, blog);
-      // refreshPage();
-      toggle()
+      refreshPage();
+      // toggle()
     } catch (error) {
       console.log("error", error);
     }
@@ -39,7 +39,7 @@ const Blog = ({ blog }) => {
             {blog.title} <button onClick={() => toggle()}>hide</button>
           </li>
           <li>
-            <a href={blog.url}>{blog.url}</a>
+            <a style={{display: "table-cell"}} href={blog.url} target="_blank" rel="noreferrer">{blog.url}</a>
           </li>
           likes: {blog.likes} <button onClick={like}>like</button>
           <li>{blog.author}</li>
