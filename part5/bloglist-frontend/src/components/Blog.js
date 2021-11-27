@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import blogAddition from "../services/blogs";
 
 const Blog = ({ blog }) => {
   const [hidden, setHidden] = useState(false);
@@ -15,6 +16,21 @@ const Blog = ({ blog }) => {
     setHidden(!hidden);
   };
 
+  // const refreshPage = () => {
+  //   window.location.reload(false);
+  // };
+
+  const like = async () => {
+    blog.likes += 1;
+    try {
+      blogAddition.update(blog.id, blog);
+      // refreshPage();
+      toggle()
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   if (!hidden) {
     return (
       <div style={blogStyle}>
@@ -25,7 +41,7 @@ const Blog = ({ blog }) => {
           <li>
             <a href={blog.url}>{blog.url}</a>
           </li>
-          <li>likes: {blog.likes}</li>
+          likes: {blog.likes} <button onClick={like}>like</button>
           <li>{blog.author}</li>
         </ul>
       </div>
@@ -34,11 +50,13 @@ const Blog = ({ blog }) => {
 
   if (hidden) {
     return (
-      <div style={{ listStyle: "none", blogStyle }}>
-        <li>
-          {blog.title} {blog.author}{" "}
-          <button onClick={() => toggle()}>view</button>
-        </li>
+      <div style={blogStyle}>
+        <div style={{ listStyle: "none" }}>
+          <li>
+            {blog.title} {blog.author}{" "}
+            <button onClick={() => toggle()}>view</button>
+          </li>
+        </div>
       </div>
     );
   }
