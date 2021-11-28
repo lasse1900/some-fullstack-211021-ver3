@@ -1,72 +1,72 @@
-import React, { useState, useEffect } from "react";
-import Blog from "./components/Blog";
-import BlogForm from "./components/BlogForm";
-import blogService from "./services/blogs";
-import loginService from "./services/login";
-import Notification from "./components/Notification";
-import Togglable from "./components/Togglable";
-import LoginForm from "./components/LoginForm";
+import React, { useState, useEffect } from 'react'
+import Blog from './components/Blog'
+import BlogForm from './components/BlogForm'
+import blogService from './services/blogs'
+import loginService from './services/login'
+import Notification from './components/Notification'
+import Togglable from './components/Togglable'
+import LoginForm from './components/LoginForm'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState({});
+  const [blogs, setBlogs] = useState([])
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
+  const [notification, setNotification] = useState({})
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+    blogService.getAll().then((blogs) => setBlogs(blogs))
+  }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
     }
-  }, []);
+  }, [])
 
   const alert = (message, error) => {
-    setNotification({ message, error });
+    setNotification({ message, error })
     setTimeout(() => {
-      setNotification({});
-    }, 4000);
-  };
+      setNotification({})
+    }, 4000)
+  }
 
   const notify = (message, error) => {
-    setNotification({ message, error });
+    setNotification({ message, error })
     setTimeout(() => {
-      setNotification({});
-    }, 4000);
-  };
+      setNotification({})
+    }, 4000)
+  }
 
   const handleLogin = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const user = await loginService.login({
         username,
         password,
-      });
-      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
-      setUser(user);
-      setUsername("");
-      setPassword("");
-      blogService.setToken(user.token);
+      })
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+      setUser(user)
+      setUsername('')
+      setPassword('')
+      blogService.setToken(user.token)
     } catch (exception) {
-      console.log("käyttäjätunnus tai salasana virheellinen");
-      alert(`${username} loggin failed`);
-      alert(`${exception.response.data.error}`);
+      console.log('käyttäjätunnus tai salasana virheellinen')
+      alert(`${username} loggin failed`)
+      alert(`${exception.response.data.error}`)
     }
-  };
+  }
 
-  const handleLogout = async (event) => {
-    window.localStorage.removeItem("loggedBlogappUser");
-    setUser(null);
-  };
+  const handleLogout = async () => {
+    window.localStorage.removeItem('loggedBlogappUser')
+    setUser(null)
+  }
 
   const loginForm = () => (
-    <Togglable buttonLabel="log in">
+    <Togglable buttonLabel='log in'>
       <LoginForm
         username={username}
         password={password}
@@ -75,7 +75,7 @@ const App = () => {
         handleSubmit={handleLogin}
       />
     </Togglable>
-  );
+  )
 
   const removeBlog = (removedBlog) => {
     const newBlogs = blogs.filter(blog => blog.id !== removedBlog.id)
@@ -90,8 +90,8 @@ const App = () => {
         loginForm()
       ) : (
         <div>
-          <div style={{ color: "green", fontSize: "24px" }}>
-            Logged in as {user.name}{" "}
+          <div style={{ color: 'green', fontSize: '24px' }}>
+            Logged in as {user.name}{' '}
             <button onClick={() => handleLogout()}>logout</button>
           </div>
           <br></br>
@@ -106,13 +106,13 @@ const App = () => {
       <div>
         <br></br>
         {blogs
-        .sort((a,b) => b.likes - a.likes)
-        .map((blog) => (
-          <Blog key={blog.id} blog={blog} user={user} username={username} removeBlog={removeBlog}/>
-        ))}
+          .sort((a,b) => b.likes - a.likes)
+          .map((blog) => (
+            <Blog key={blog.id} blog={blog} user={user} username={username} removeBlog={removeBlog}/>
+          ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
