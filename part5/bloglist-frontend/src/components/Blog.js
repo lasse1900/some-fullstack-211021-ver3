@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import blogAddition from "../services/blogs";
+import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, removeBlog, user }) => {
   const [hidden, setHidden] = useState(false);
+  const hideDeleteButton = (blog.author === user.name)
+
+  console.log('blog author', blog.author, user.name)
 
   const blogStyle = {
     paddingTop: 10,
@@ -23,9 +26,19 @@ const Blog = ({ blog }) => {
   const like = async () => {
     blog.likes += 1;
     try {
-      blogAddition.update(blog.id, blog);
+      await blogService.update(blog.id,blog);
       refreshPage();
       // toggle()
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  const deleteBlog = async () => {
+    if (!window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) return;
+    try {
+      removeBlog(blog)
+      await blogService.remove(blog.id)
     } catch (error) {
       console.log("error", error);
     }
@@ -43,6 +56,7 @@ const Blog = ({ blog }) => {
           </li>
           likes: {blog.likes} <button onClick={like}>like</button>
           <li>{blog.author}</li>
+          <button style={{ display: hideDeleteButton ? false : "none"}} onClick={deleteBlog}>remove</button>
         </ul>
       </div>
     );

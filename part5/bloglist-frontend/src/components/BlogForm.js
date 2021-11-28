@@ -22,7 +22,6 @@ const BlogForm = ({ blogs, setBlogs, notify }) => {
       setAuthor("");
       setUrl("");
       setState(!state);
-      console.log("Blog added");
     } catch (error) {
       notify(`${error.response.data.error}`, false);
     }

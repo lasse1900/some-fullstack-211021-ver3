@@ -77,6 +77,11 @@ const App = () => {
     </Togglable>
   );
 
+  const removeBlog = (removedBlog) => {
+    const newBlogs = blogs.filter(blog => blog.id !== removedBlog.id)
+    setBlogs(newBlogs)
+  }
+
   return (
     <div>
       <h2>Blogs</h2>
@@ -100,11 +105,10 @@ const App = () => {
       )}
       <div>
         <br></br>
-        
         {blogs
         .sort((a,b) => b.likes - a.likes)
         .map((blog) => (
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} user={user} removeBlog={removeBlog}/>
         ))}
       </div>
     </div>
