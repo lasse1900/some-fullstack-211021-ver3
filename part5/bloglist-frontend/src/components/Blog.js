@@ -19,7 +19,7 @@ const Blog = ({ blog, removeBlog, user }) => {
       Boolean = blog.author === user.username
       return Boolean
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       return
     }
   }
@@ -28,14 +28,6 @@ const Blog = ({ blog, removeBlog, user }) => {
 
   const toggleVisibility = () => {
     setVisible(!hidden)
-  }
-
-  if (!hidden) {
-    return (
-      <div className='blogStyle' onClick={toggleVisibility}>
-        {blog.title} {blog.author}
-      </div>
-    )
   }
 
   const like = async () => {
@@ -56,6 +48,16 @@ const Blog = ({ blog, removeBlog, user }) => {
         console.log('error', error)
       }
     }
+  }
+
+  if (!hidden) {
+    return (
+      <div style={blogStyle} >
+        <div onClick={toggleVisibility}>
+          {blog.title} {blog.author}
+        </div>
+      </div>
+    )
   }
 
   return (
