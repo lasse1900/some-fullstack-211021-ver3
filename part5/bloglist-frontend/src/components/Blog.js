@@ -1,17 +1,8 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
-import '../index.css'
 
 const Blog = ({ blog, removeBlog, user }) => {
-  const [hidden, setVisible] = useState(false)
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  }
+  const [hidden, setHidden] = useState(true)
 
   const blogOwner = () => {
     let Boolean = false
@@ -26,14 +17,28 @@ const Blog = ({ blog, removeBlog, user }) => {
 
   const buttonShow = { display: blogOwner() ? '' : 'none' }
 
-  const toggleVisibility = () => {
-    setVisible(!hidden)
+  const blogStyle = {
+    paddingTop: 2,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 2,
   }
+
+  const toggle = () => {
+    setHidden(!hidden)
+  }
+
+  // const refreshPage = () => {
+  //   window.location.reload(false)
+  // }
 
   const like = async () => {
     blog.likes += 1
     try {
-      blogService.update(blog.id, blog)
+      await blogService.update(blog.id,blog)
+      // refreshPage()
+      toggle()
     } catch (error) {
       console.log('error', error)
     }
@@ -52,36 +57,36 @@ const Blog = ({ blog, removeBlog, user }) => {
 
   if (!hidden) {
     return (
-      <div style={blogStyle} >
-        <div onClick={toggleVisibility}>
-          {blog.title} {blog.author}
-        </div>
+      <div style={blogStyle}>
+        <ul style={{ listStyle: 'none' }}>
+          <li>
+            {blog.title}{' '}
+            <button className="expand-blog-button" onClick={() => toggle()}>hide</button>
+          </li>
+          <li>
+            <a style={{ display: 'table-cell' }} href={blog.url} target='_blank' rel='noreferrer'>{blog.url}</a>
+          </li>
+          likes: {blog.likes}{' '}
+          <button className='like-button' onClick={() => like()}>like</button>
+          <li>{blog.author}</li>
+          <button style={buttonShow} onClick={remove}> remove</button>
+        </ul>
       </div>
     )
   }
 
-  return (
-    <div style={blogStyle}>
-      <div onClick={toggleVisibility}>
-        {blog.title}
-        <br />
-        <a
-          style={{ display: 'table-cell' }}
-          href={blog.url}
-          target='_blank'
-          rel='noreferrer'
-        >
-          {blog.url}
-        </a>
-        {blog.likes} - likes <button onClick={like}>like</button>
-        <br /> added by: {blog.author}
-        <br />{' '}
-        <button style={buttonShow} onClick={remove}>
-          remove
-        </button>
+  if (hidden) {
+    return (
+      <div style={blogStyle}>
+        <div style={{ listStyle: 'none' }}>
+          <li>
+            {blog.title} {blog.author}{' '}
+            <button onClick={() => toggle()}>view</button>
+          </li>
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
 
 export default Blog
