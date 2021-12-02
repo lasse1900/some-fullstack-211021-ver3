@@ -35,10 +35,11 @@ const BlogForm = ({ blogs, setBlogs, notify }) => {
   return (
     <div>
       <div style={{ display: state ? null : 'none' }}>
-        <form onSubmit={(event) => addBlog(event)}>
+        <form  id='addBlogform' onSubmit={(event) => addBlog(event)}>
           <div>
             title:
             <input
+              id='title'
               type='text'
               name='title'
               value={title}
@@ -48,6 +49,7 @@ const BlogForm = ({ blogs, setBlogs, notify }) => {
           <div>
             author:
             <input
+              id='author'
               type='text'
               name='author'
               value={author}
@@ -57,6 +59,7 @@ const BlogForm = ({ blogs, setBlogs, notify }) => {
           <div>
             url:
             <input
+              id='url'
               type='text'
               name='url'
               value={url}
@@ -64,7 +67,7 @@ const BlogForm = ({ blogs, setBlogs, notify }) => {
             />
           </div>
           <br></br>
-          <button type='submit'>create</button>
+          <button data-cy='submit-create' >create</button>
           <br></br>
         </form>
       </div>

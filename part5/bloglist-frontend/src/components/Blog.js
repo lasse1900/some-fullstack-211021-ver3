@@ -59,17 +59,17 @@ const Blog = ({ blog, removeBlog, user }) => {
     return (
       <div style={blogStyle}>
         <ul style={{ listStyle: 'none' }}>
-          <li>
+          <li className='title-value'>
             {blog.title}{' '}
-            <button className="expand-blog-button" onClick={() => toggle()}>hide</button>
+            <button className="submit-toggleHide" onClick={() => toggle()}>hide</button>
           </li>
           <li>
             <a style={{ display: 'table-cell' }} href={blog.url} target='_blank' rel='noreferrer'>{blog.url}</a>
           </li>
           likes: {blog.likes}{' '}
-          <button className='like-button' onClick={() => like()}>like</button>
+          <button data-cy='like-submit' onClick={() => like()}>like</button>
           <li>{blog.author}</li>
-          <button style={buttonShow} onClick={remove}> remove</button>
+          <button id='remove-button' style={buttonShow} onClick={remove}> remove</button>
         </ul>
       </div>
     )
@@ -80,8 +80,8 @@ const Blog = ({ blog, removeBlog, user }) => {
       <div style={blogStyle}>
         <div style={{ listStyle: 'none' }}>
           <li>
-            {blog.title} {blog.author}{' '}
-            <button onClick={() => toggle()}>view</button>
+            {blog.title} @{blog.author}{' '}
+            <button className='submit-toggleView' onClick={() => toggle()}>view</button>
           </li>
         </div>
       </div>

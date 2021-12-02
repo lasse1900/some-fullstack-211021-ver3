@@ -66,7 +66,7 @@ const App = () => {
   }
 
   const loginForm = () => (
-    <Togglable buttonLabel='log in'>
+    <Togglable buttonLabel='login'>
       <LoginForm
         username={username}
         password={password}
@@ -92,7 +92,7 @@ const App = () => {
         <div>
           <div style={{ color: 'green', fontSize: '24px' }}>
             Logged in as {user.name}{' '}
-            <button onClick={() => handleLogout()}>logout</button>
+            <button id='logout-button' onClick={() => handleLogout()}>logout</button>
           </div>
           <br></br>
           <BlogForm
