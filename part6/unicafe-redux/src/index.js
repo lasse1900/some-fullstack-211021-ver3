@@ -30,9 +30,9 @@ const App = () => {
         <button onClick={reset}>reset</button>
       </div>
       <div className="display-counts">
-        <div>hyvä {store.getState().good}</div>
-        <div>neutraali {store.getState().ok}</div>
-        <div>huono {store.getState().bad}</div>
+        <div>good {store.getState().good}</div>
+        <div>neutral {store.getState().ok}</div>
+        <div>bad {store.getState().bad}</div>
       </div>
     </>
   );
