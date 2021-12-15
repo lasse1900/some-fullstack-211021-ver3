@@ -1,5 +1,6 @@
 import React from "react";
 import { votesToAnecdote } from "./reducers/anecdoteReducer";
+import "./style.css";
 
 const App = (props) => {
   const anecdotes = props.store.getState();
@@ -9,26 +10,37 @@ const App = (props) => {
     props.store.dispatch(votesToAnecdote(id));
   };
 
-  return (
-    <div>
-      <h2>Anecdotes</h2>
+  const createAnecdote = (event) => {
+    event.preventDefault();
+    console.log("->", event.target.anecdote.value);
+    props.store.dispatch({
+      type: "NEW_ANECDOTE",
+      data: { content: event.target.anecdote.value },
+    });
+    event.target.anecdote.value = "";
+  };
 
-      {anecdotes.map((anecdote) => (
-        <div key={anecdote.id}>
-          <div>{anecdote.content}</div>
-          <div>
-            has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+  return (
+    <div className="layout">
+      <h2>Anecdotes</h2>
+      <div className="anecdote-list">
+        {anecdotes.map((anecdote) => (
+          <div key={anecdote.id}>
+            <div>{anecdote.content}</div>
+            <div className="vote-count">
+              has {anecdote.votes}
+              <button onClick={() => vote(anecdote.id)}>vote</button>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
       <h2>create new</h2>
-      <form>
+      <form onSubmit={createAnecdote}>
         <div>
-          <input />
+          <input name="anecdote" />
         </div>
-        <button>create</button>
+        <button action="submit">create</button>
       </form>
     </div>
   );
