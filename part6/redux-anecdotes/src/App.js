@@ -1,5 +1,6 @@
 import React from "react";
 import { votesToAnecdote } from "./reducers/anecdoteReducer";
+import AnecdoteForm from "./components/AnecdoteForm";
 import "./style.css";
 
 const App = (props) => {
@@ -8,16 +9,6 @@ const App = (props) => {
   const vote = (id) => {
     console.log("vote", id);
     props.store.dispatch(votesToAnecdote(id));
-  };
-
-  const createAnecdote = (event) => {
-    event.preventDefault();
-    console.log("->", event.target.anecdote.value);
-    props.store.dispatch({
-      type: "NEW_ANECDOTE",
-      data: { content: event.target.anecdote.value },
-    });
-    event.target.anecdote.value = "";
   };
 
   return (
@@ -36,14 +27,7 @@ const App = (props) => {
             </div>
           ))}
       </div>
-
-      <h2>create new</h2>
-      <form onSubmit={createAnecdote}>
-        <div>
-          <input name="anecdote" />
-        </div>
-        <button action="submit">create</button>
-      </form>
+      <AnecdoteForm store={props.store} />
     </div>
   );
 };
