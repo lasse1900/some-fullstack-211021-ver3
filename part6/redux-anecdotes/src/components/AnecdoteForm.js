@@ -1,11 +1,14 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import "../style.css";
 
-const AnecdoteForm = (props) => {
+const AnecdoteForm = () => {
+  const dispatch = useDispatch();
+
   const createAnecdote = (event) => {
     event.preventDefault();
     console.log("->", event.target.anecdote.value);
-    props.store.dispatch({
+    dispatch({
       type: "NEW_ANECDOTE",
       data: { content: event.target.anecdote.value },
     });

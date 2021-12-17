@@ -3,11 +3,12 @@ import AnecdoteForm from "./components/AnecdoteForm";
 import AnecdoteList from "./components/AnecdoteList";
 import "./style.css";
 
-const App = (props) => {
+const App = () => {
   return (
     <div>
-      <AnecdoteList store={props.store} />
-      <AnecdoteForm store={props.store} />
+      <h2>Anecdotes</h2>
+      <AnecdoteList />
+      <AnecdoteForm />
     </div>
   );
 };

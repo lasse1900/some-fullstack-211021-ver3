@@ -1,18 +1,19 @@
 import React from "react";
 import "../style.css";
 import { votesToAnecdote } from "../reducers/anecdoteReducer";
+import { useDispatch, useSelector } from "react-redux";
 
-const AnecdoteList = (props) => {
-  const anecdotes = props.store.getState();
+const AnecdoteList = () => {
+  const dispatch = useDispatch();
+  const anecdotes = useSelector((state) => state);
 
   const vote = (id) => {
     console.log("vote", id);
-    props.store.dispatch(votesToAnecdote(id));
+    dispatch(votesToAnecdote(id));
   };
 
   return (
     <div className="layout">
-      <h2>Anecdotes</h2>
       <div className="anecdote-list">
         {anecdotes
           .sort((a, b) => b.votes - a.votes)
