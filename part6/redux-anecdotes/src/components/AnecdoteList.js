@@ -9,10 +9,17 @@ import {
 
 const AnecdoteList = () => {
   const dispatch = useDispatch();
-  const anecdotes = useSelector((state) => state.anecdotes);
+  const anecdotes = useSelector((state) => {
+    if (state.filter.query) {
+      return state.anecdotes.filter((anecdote) =>
+        anecdote.content.includes(state.filter.query)
+      );
+    }
+    return state.anecdotes;
+  });
 
   const vote = (anecdote) => {
-    console.log("vote", anecdote);
+    // console.log("vote", anecdote);
     dispatch(votesToAnecdote(anecdote.id));
     dispatch(createNotification(`You voted: ${anecdote.content}`));
     setTimeout(() => dispatch(clearNotification()), 5000);

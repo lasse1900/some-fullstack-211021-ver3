@@ -24,13 +24,15 @@ const AnecdoteForm = () => {
   };
 
   return (
-    <div>
+    <div className="form-row">
       <h2>create new</h2>
       <form onSubmit={create}>
         <div>
-          <input name="anecdote" />
+          <input className="input" name="anecdote" />
         </div>
-        <button action="submit">create</button>
+        <div className="create-btn">
+          <button action="submit">create</button>
+        </div>
       </form>
     </div>
   );
