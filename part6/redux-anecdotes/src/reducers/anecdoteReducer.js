@@ -1,5 +1,3 @@
-const generateId = () => (100000 * Math.random()).toFixed(0);
-
 export const votesToAnecdote = (id) => {
   return {
     type: "VOTE",
@@ -7,13 +5,10 @@ export const votesToAnecdote = (id) => {
   };
 };
 
-export const createAnecdote = (content) => {
+export const createAnecdote = (data) => {
   return {
     type: "NEW_ANECDOTE",
-    data: {
-      content,
-      id: generateId(),
-    },
+    data,
   };
 };
 
@@ -27,12 +22,7 @@ export const initializeAnecdotes = (anecdotes) => {
 const anecdoteReducer = (state = [], action) => {
   switch (action.type) {
     case "NEW_ANECDOTE":
-      const newAnecdote = {
-        content: action.data.content,
-        id: generateId(),
-        votes: 0,
-      };
-      return state.concat(newAnecdote);
+      return [...state, action.data];
     case "VOTE":
       const id = action.data.id;
       const anecdoteToVote = state.find((n) => n.id === id);
