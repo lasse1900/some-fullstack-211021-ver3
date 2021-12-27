@@ -7,15 +7,15 @@ import {
 } from "../reducers/notificationReducer";
 import "../style.css";
 
-const AnecdoteForm = (props) => {
+const AnecdoteForm = () => {
   const dispatch = useDispatch();
   const create = async (event) => {
     event.preventDefault();
     const anecdoteContent = event.target.anecdote.value;
     event.target.anecdote.value = "";
 
-    props.createAnecdote(anecdoteContent);
-    props.setNotification(`you added ${anecdoteContent}`);
+    dispatch(createAnecdote(anecdoteContent));
+    dispatch(setNotification(`you added ${anecdoteContent}`));
     setTimeout(() => dispatch(clearNotification()), 5000);
   };
 
