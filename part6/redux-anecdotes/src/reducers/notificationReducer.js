@@ -1,29 +1,27 @@
-const initialState = {
-  message: null,
-};
-
-export const createNotification = (message) => {
-  return {
-    type: "CREATE_NOTIFICATION",
-    data: {
-      message,
-    },
+export const setNotification = (text) => {
+  return async (dispatch) => {
+    dispatch({
+      type: "SET_NOTIFICATION",
+      data: {
+        text,
+      },
+    });
   };
 };
+
 
 export const clearNotification = () => {
   return {
     type: "CLEAR_NOTIFICATION",
-    data: initialState,
   };
 };
 
-const notificationReducer = (state = initialState, action) => {
+const notificationReducer = (state = { text: "" }, action) => {
   switch (action.type) {
-    case "CREATE_NOTIFICATION":
-      return action.data;
+    case "SET_NOTIFICATION":
+      return { text: action.data.text };
     case "CLEAR_NOTIFICATION":
-      return action.data;
+      return { text: "", timer: null };
     default:
       return state;
   }

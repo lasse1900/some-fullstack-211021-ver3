@@ -3,7 +3,7 @@ import "../style.css";
 import { votesToAnecdote } from "../reducers/anecdoteReducer";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  createNotification,
+  setNotification,
   clearNotification,
 } from "../reducers/notificationReducer";
 
@@ -21,7 +21,7 @@ const AnecdoteList = () => {
   const vote = (anecdote) => {
     // console.log("vote", anecdote);
     dispatch(votesToAnecdote(anecdote.id));
-    dispatch(createNotification(`You voted: ${anecdote.content}`));
+    dispatch(setNotification(`You voted: ${anecdote.content}`));
     setTimeout(() => dispatch(clearNotification()), 5000);
   };
 
