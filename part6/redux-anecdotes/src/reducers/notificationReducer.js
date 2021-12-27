@@ -1,4 +1,6 @@
-export const setNotification = (text) => {
+export const setNotification = (props) => {
+  const { text, delay } = props;
+  // console.log("--->", text, delay);
   return async (dispatch) => {
     dispatch({
       type: "SET_NOTIFICATION",
@@ -6,9 +8,14 @@ export const setNotification = (text) => {
         text,
       },
     });
+    setTimeout(() => {
+      dispatch({
+        type: "CLEAR_NOTIFICATION",
+        data: '',
+      });
+    }, delay * 1000);
   };
 };
-
 
 export const clearNotification = () => {
   return {
