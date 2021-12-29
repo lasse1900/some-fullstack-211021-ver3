@@ -8,7 +8,6 @@ import {
   Redirect,
   useHistory,
   useRouteMatch,
-  useParams,
 } from "react-router-dom";
 
 const Anecdote = ({ anecdote }) => (
@@ -17,6 +16,9 @@ const Anecdote = ({ anecdote }) => (
     <p>{anecdote.author}</p>
     <p>has {anecdote.votes} votes</p>
     for more info see: <a href={`${anecdote.info}`}> {anecdote.info}</a>
+    <p>
+      <br></br>
+    </p>
   </div>
 );
 
@@ -92,16 +94,24 @@ const CreateNew = (props) => {
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
   const [info, setInfo] = useState("");
+  const [added, setAdded] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("You clicked submit.");
     props.addNew({
       content,
       author,
       info,
       votes: 0,
     });
+    props.notify(`a new anecdote '${content}' created!`);
+    setAdded(true);
   };
+
+  if (added) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <div>
@@ -131,7 +141,7 @@ const CreateNew = (props) => {
             onChange={(e) => setInfo(e.target.value)}
           />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
       </form>
     </div>
   );
@@ -157,6 +167,13 @@ const App = () => {
 
   const [notification, setNotification] = useState("");
 
+  const notify = (message) => {
+    setNotification(message);
+    setTimeout(() => {
+      setNotification("");
+    }, 10000);
+  };
+
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0);
     setAnecdotes(anecdotes.concat(anecdote));
@@ -180,6 +197,11 @@ const App = () => {
       <div>
         <h1>Software anecdotes</h1>
         <Menu />
+        {notification && (
+          <div>
+            <em>{notification}</em>
+          </div>
+        )}
         <Route exact path="/">
           <AnecdoteList anecdotes={anecdotes} />
         </Route>
@@ -190,7 +212,7 @@ const App = () => {
           )}
         />
         <Route path="/create">
-          <CreateNew addNew={addNew} />
+          <CreateNew addNew={addNew} notify={notify} />
         </Route>
         <Route path="/about">
           <About about={About} />
