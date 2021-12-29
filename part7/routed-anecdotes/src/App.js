@@ -8,14 +8,26 @@ import {
   Redirect,
   useHistory,
   useRouteMatch,
+  useParams,
 } from "react-router-dom";
+
+const Anecdote = ({ anecdote }) => (
+  <div>
+    <h2>{anecdote.content}</h2>
+    <p>{anecdote.author}</p>
+    <p>has {anecdote.votes} votes</p>
+    for more info see: <a href={`${anecdote.info}`}> {anecdote.info}</a>
+  </div>
+);
 
 const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
       {anecdotes.map((anecdote) => (
-        <li key={anecdote.id}>{anecdote.content}</li>
+        <li key={anecdote.id}>
+          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+        </li>
       ))}
     </ul>
   </div>
@@ -165,20 +177,26 @@ const App = () => {
 
   return (
     <div>
-      <h1>Software anecdotes</h1>
-      <Menu />
-      <Switch>
+      <div>
+        <h1>Software anecdotes</h1>
+        <Menu />
+        <Route exact path="/">
+          <AnecdoteList anecdotes={anecdotes} />
+        </Route>
+        <Route
+          path="/anecdotes/:id"
+          render={({ match }) => (
+            <Anecdote anecdote={anecdoteById(match.params.id)} />
+          )}
+        />
         <Route path="/create">
           <CreateNew addNew={addNew} />
         </Route>
         <Route path="/about">
           <About about={About} />
         </Route>
-        <Route path="/">
-          <AnecdoteList anecdotes={anecdotes} />
-        </Route>
-      </Switch>
-      <Footer />
+        <Footer />
+      </div>
     </div>
   );
 };
