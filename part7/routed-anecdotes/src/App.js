@@ -91,9 +91,9 @@ const CreateNew = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     props.addNew({
-      content: content.value,
-      author: author.value,
-      info: info.value,
+      content: content.attributes.value,
+      author: author.attributes.value,
+      info: info.attributes.value,
       votes: 0,
     });
     props.notify(`a new anecdote '${content.value}' created!`);
@@ -117,15 +117,15 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input {...content} />
+          <input {...content.attributes} />
         </div>
         <div>
           author
-          <input {...author} />
+          <input {...author.attributes} />
         </div>
         <div>
           url for more info
-          <input {...info} />
+          <input {...info.attributes} />
         </div>
         <button type="submit">create</button>
         <button onClick={(e) => resetInputs(e)}>reset</button>
@@ -135,7 +135,6 @@ const CreateNew = (props) => {
 };
 
 const App = () => {
-
   const [anecdotes, setAnecdotes] = useState([
     {
       content: "If it hurts, do it more often",
