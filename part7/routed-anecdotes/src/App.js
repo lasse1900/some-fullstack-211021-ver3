@@ -1,14 +1,6 @@
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
-
-import {
-  Switch,
-  Route,
-  Link,
-  Redirect,
-  useHistory,
-  useRouteMatch,
-} from "react-router-dom";
+import { useField } from "./hooks";
+import { Route, Link, Redirect } from "react-router-dom";
 
 const Anecdote = ({ anecdote }) => (
   <div>
@@ -91,22 +83,28 @@ const Menu = () => {
 };
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState("");
-  const [author, setAuthor] = useState("");
-  const [info, setInfo] = useState("");
+  const author = useField("text");
+  const content = useField("text");
+  const info = useField("text");
   const [added, setAdded] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("You clicked submit.");
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0,
     });
-    props.notify(`a new anecdote '${content}' created!`);
+    props.notify(`a new anecdote '${content.value}' created!`);
     setAdded(true);
+  };
+
+  const resetInputs = (e) => {
+    e.preventDefault();
+    content.clearValue();
+    author.clearValue();
+    info.clearValue();
   };
 
   if (added) {
@@ -119,35 +117,25 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input
-            name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
+          <input {...content} />
         </div>
         <div>
           author
-          <input
-            name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
+          <input {...author} />
         </div>
         <div>
           url for more info
-          <input
-            name="info"
-            value={info}
-            onChange={(e) => setInfo(e.target.value)}
-          />
+          <input {...info} />
         </div>
         <button type="submit">create</button>
+        <button onClick={(e) => resetInputs(e)}>reset</button>
       </form>
     </div>
   );
 };
 
 const App = () => {
+
   const [anecdotes, setAnecdotes] = useState([
     {
       content: "If it hurts, do it more often",
