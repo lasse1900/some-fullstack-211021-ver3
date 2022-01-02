@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { useField } from "./hook";
+import { useField } from "./hooks/index";
 import { Route, Link, Redirect } from "react-router-dom";
+import { Table } from "react-bootstrap";
 
 const Anecdote = ({ anecdote }) => (
   <div>
@@ -17,13 +18,17 @@ const Anecdote = ({ anecdote }) => (
 const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
-    <ul>
-      {anecdotes.map((anecdote) => (
-        <li key={anecdote.id}>
-          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
-        </li>
-      ))}
-    </ul>
+    <Table striped>
+      <tbody>
+        {anecdotes.map((anecdote) => (
+          <tr key={anecdote.id}>
+            <td>
+              <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
   </div>
 );
 
@@ -180,7 +185,7 @@ const App = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <div>
         <h1>Software anecdotes</h1>
         <Menu />
