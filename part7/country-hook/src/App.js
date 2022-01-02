@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const useField = (type) => {
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState("");
 
   const onChange = (event) => {
-    setValue(event.target.value)
-  }
+    setValue(event.target.value);
+  };
 
   return {
     type,
     value,
-    onChange
-  }
-}
+    onChange,
+  };
+};
 
 const useCountry = (name) => {
   const [countries, setCountries] = useState([]);
@@ -21,18 +21,15 @@ const useCountry = (name) => {
 
   useEffect(() => {
     if (name) {
-      axios.get(countriesUrl).then(
-        (response) => {
-          setCountries(response.data);
-        },
-        () => setCountries([])
-      );
+      axios.get(countriesUrl).then((response) => {
+        setCountries(response.data);
+      });
     }
   }, [name, countriesUrl]);
 
   return {
     countries: countries,
-    found: countries.length
+    found: countries.length,
   };
 };
 
@@ -50,7 +47,7 @@ const Countries = ({ country }) => {
     return null;
   }
   if (!country.found) {
-    return <div>No countries found</div>;
+    return <div>not found...</div>;
   }
   return <ul>{country.countries.map((country) => Country(country))}</ul>;
 };
