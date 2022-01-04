@@ -1,0 +1,35 @@
+.App {
+    margin: 0px 40px 10px 40px;
+  }
+  
+  .App-logo {
+    height: 35px;
+    margin: 20px 10px 10px 40px;
+    fill: white;
+  }
+  
+  .App-header {
+    min-height: 50px;
+    display: flex;
+    flex-direction: column;
+    background: #1D4485
+  }
+  
+  .App-header-text {
+    height: 35px;
+    margin: 30px 10px 10px 400px;
+    /* align-content: flex-start; */
+    fill: white;
+  }
+  
+  .lista {
+    min-height: 50px;
+    font-size: calc(10px + 2vmin);
+    color: green;
+    margin: 20px 10px 10px 400px;
+  }
+  
+  .lista-header {
+    color: black;
+    font-style: italic;
+  }
