@@ -1,20 +1,26 @@
 import React from 'react'
-import '../App.css'
+import { connect } from 'react-redux'
 
-const Notification = ({ notification }) => {
-  if (notification.error) {
-    return (
-      <div style={{ color: 'green', fontSize: '32px' }}>
-        {notification.message}
-      </div>
-    )
-  } else if (!notification.error) {
-    return (
-      <div style={{ color: 'red', fontSize: '32px' }}>
-        {notification.message}
-      </div>
-    )
+const Notification = (props) => {
+  if (props.notification === '') {
+    return null
+  }
+  const style = {
+    color: props.notification.type === 'error' ? 'red' : 'green',
+    fontSize: 20,
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  }
+
+  return <div style={style}>{props.notification.message}</div>
+}
+
+const mapStateToProps = (state) => {
+  return {
+    notification: state.notification,
   }
 }
 
-export default Notification
+const ConnectedNotification = connect(mapStateToProps)(Notification)
+export default ConnectedNotification

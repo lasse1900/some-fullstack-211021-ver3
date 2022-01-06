@@ -6,13 +6,14 @@ import loginService from './services/login'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
+import { connect } from 'react-redux'
+import { setNotification } from './reducers/notificationReducer'
 
-const App = () => {
+const App = (props) => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState({})
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -27,18 +28,8 @@ const App = () => {
     }
   }, [])
 
-  const alert = (message, error) => {
-    setNotification({ message, error })
-    setTimeout(() => {
-      setNotification({})
-    }, 4000)
-  }
-
-  const notify = (message, error) => {
-    setNotification({ message, error })
-    setTimeout(() => {
-      setNotification({})
-    }, 4000)
+  const notify = (message, type = 'success') => {
+    props.setNotification({ message: message, type: type }, 2)
   }
 
   const handleLogin = async (event) => {
@@ -55,8 +46,7 @@ const App = () => {
       blogService.setToken(user.token)
     } catch (exception) {
       console.log('käyttäjätunnus tai salasana virheellinen')
-      alert(`${username} loggin failed`)
-      alert(`${exception.response.data.error}`)
+      notify('käyttäjätunnus tai salasana virheellinen', 'error')
     }
   }
 
@@ -85,7 +75,7 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
-      <Notification notification={notification} />
+      <Notification />
       {user === null ? (
         loginForm()
       ) : (
@@ -106,13 +96,29 @@ const App = () => {
       <div>
         <br></br>
         {blogs
-          .sort((a,b) => b.likes - a.likes)
+          .sort((a, b) => b.likes - a.likes)
           .map((blog) => (
-            <Blog key={blog.id} blog={blog} user={user} username={username} removeBlog={removeBlog}/>
+            <Blog
+              key={blog.id}
+              blog={blog}
+              user={user}
+              username={username}
+              removeBlog={removeBlog}
+            />
           ))}
       </div>
     </div>
   )
 }
 
-export default App
+const mapStateToProps = (state) => {
+  console.log('state: ', state)
+
+  return {
+    notification: state.notification,
+  }
+}
+const mapDispatchToProps = { setNotification }
+
+const ConnectedApp = connect(mapStateToProps, mapDispatchToProps)(App)
+export default ConnectedApp
