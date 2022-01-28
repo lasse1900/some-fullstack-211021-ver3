@@ -1,30 +1,33 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
-import loginService from './services/login'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import { useField } from './hooks'
 import { setMessage } from './reducers/notificationReducer'
 import { initializeBlogs, removeBlog } from './reducers/blogReducer'
+import { loginUser, setUser, logoutUser } from './reducers/userReducer'
 
 const App = ({
+  user,
   blogs,
   initializeBlogs,
-  setMessage
+  setMessage,
+  loginUser,
+  setUser,
+  logoutUser,
 }) => {
   const username = useField('username')
   const password = useField('password')
-  const [user, setUser] = useState(null)
 
   useEffect(() => {
     initializeBlogs()
   }, [initializeBlogs])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
@@ -45,32 +48,27 @@ const App = ({
     }
 
     try {
-      // console.log('credentials', credentials)
-      const user = await loginService.login(
-        credentials
-      )
-      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+      const user = await loginUser(credentials)
+      username.reset()
+      password.reset()
 
-      setUser(user)
-      blogService.setToken(user.token)
-      notify(`${username.value} logged in`, false)
-      username.reset('')
-      password.reset('')
+      notify(`${user.username} successfully logged in`)
     } catch (exception) {
-      console.log('käyttäjätunnus tai salasana virheellinen')
-      notify(`${exception.response.data.error}`, true)
+      notify('wrong username or password', 'error')
     }
   }
+
   const omitReset = (hook) => {
     // eslint-disable-next-line no-unused-vars
     let { reset, ...hookWithoutReset } = hook
     return hookWithoutReset
   }
 
-  const handleLogout = async () => {
-    window.localStorage.removeItem('loggedBlogappUser')
-    notify(`${user.username} logged out`, false)
+  const handleLogout = () => {
+    window.localStorage.removeItem('loggedUser')
+    notify(`${user.username} successfully logged out`, false)
     setUser(null)
+    logoutUser()
   }
 
   if (user === null) {
@@ -99,7 +97,7 @@ const App = ({
       {blogs
         .sort((a, b) => b.likes - a.likes)
         .map(blog => (
-          <Blog key={blog.id} blog={blog} user={user} removeBlog={removeBlog} notify={notify} creator={blog.user.username === user.username}/>
+          <Blog key={blog.id} blog={blog} user={user} removeBlog={removeBlog} notify={notify}/>
         ))}
       <br></br>
       <button onClick={handleLogout}>logout</button>
@@ -109,7 +107,8 @@ const App = ({
 
 const mapStateToProps = state => {
   return {
-    blogs: state.blogs
+    blogs: state.blogs,
+    user: state.user
   }
 }
 
@@ -117,6 +116,9 @@ const mapDispatchToProps = {
   initializeBlogs,
   removeBlog,
   setMessage,
+  loginUser,
+  setUser,
+  logoutUser
 }
 
 const ConnectedApp = connect(mapStateToProps, mapDispatchToProps)(App)

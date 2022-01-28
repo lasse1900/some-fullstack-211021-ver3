@@ -3,11 +3,10 @@ import { connect } from 'react-redux'
 import '../index.css'
 import { likeBlog, removeBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, notify, likeBlog, removeBlog, creator }) => {
+const Blog = ({ blog, user, notify, likeBlog, removeBlog }) => {
   const [hidden, setVisible] = useState(false)
 
-  // const blogOwner = blog.author === user.username
-  const blogOwner = true
+  const blogOwner = blog.author === user.username
   const buttonShow = { display: blogOwner ? '' : 'none' }
 
   const toggleVisibility = () => {
@@ -40,8 +39,7 @@ const Blog = ({ blog, notify, likeBlog, removeBlog, creator }) => {
         <a href={blog.url}>{blog.url}</a><br></br>{blog.likes} - likes
         <br /> <button onClick={like}>like</button>
         <br /> added by {blog.author}
-        <br></br>
-        {creator && (<button style={buttonShow} onClick={remove}>remove</button> )}
+        <br /> <button style={buttonShow} onClick={remove}>remove</button>
       </div>
     </div>
   )
