@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
@@ -8,18 +8,20 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import { useField } from './hooks'
 import { setMessage } from './reducers/notificationReducer'
+import { initializeBlogs, removeBlog } from './reducers/blogReducer'
 
-const App = ({ setMessage }) => {
-  const [blogs, setBlogs] = useState([])
+const App = ({
+  blogs,
+  initializeBlogs,
+  setMessage
+}) => {
   const username = useField('username')
   const password = useField('password')
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
-  }, [])
+    initializeBlogs()
+  }, [initializeBlogs])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -59,11 +61,9 @@ const App = ({ setMessage }) => {
       notify(`${exception.response.data.error}`, true)
     }
   }
-
   const omitReset = (hook) => {
     // eslint-disable-next-line no-unused-vars
     let { reset, ...hookWithoutReset } = hook
-    // console.log('hookWitoutReset', JSON.stringify(hookWithoutReset))
     return hookWithoutReset
   }
 
@@ -73,52 +73,52 @@ const App = ({ setMessage }) => {
     setUser(null)
   }
 
-  const removeBlog = (removedBlog) => {
-    const newBlogs = blogs.filter(blog => blog.id !== removedBlog.id)
-    setBlogs(newBlogs)
-  }
-
-  if (user) {
+  if (user === null) {
     return (
       <div>
-        <h2>Blogs</h2>
         <Notification />
-        <p>{`Logged in as ${user.name}`}</p>
-        <br></br>
-        <BlogForm
-          blogs={blogs}
-          setBlogs={setBlogs}
-          notify={notify}
+        <LoginForm className='loginform'
+          username={omitReset(username)}
+          password={omitReset(password)}
+
+          handleSubmit={handleLogin}
         />
-        {blogs
-          .sort((a, b) => b.likes - a.likes)
-          .map(blog => (
-            <Blog key={blog.id} blog={blog} user={user} removeBlog={removeBlog} notify={notify} />
-          ))}
-        <br></br>
-        <button onClick={() => handleLogout()}>logout</button>
       </div>
     )
   }
 
   return (
     <div>
+      <h2>Blogs</h2>
       <Notification />
-      <LoginForm className='loginform'
-        username={omitReset(username)}
-        password={omitReset(password)}
-
-        handleSubmit={handleLogin}
+      <p>{user.username} logged in</p>
+      <BlogForm
+        blogs={blogs}
+        notify={notify}
       />
+      {blogs
+        .sort((a, b) => b.likes - a.likes)
+        .map(blog => (
+          <Blog key={blog.id} blog={blog} user={user} removeBlog={removeBlog} notify={notify} creator={blog.user.username === user.username}/>
+        ))}
+      <br></br>
+      <button onClick={handleLogout}>logout</button>
     </div>
-
   )
 }
 
-const mapDispatchToProps = {
-  setMessage
+const mapStateToProps = state => {
+  return {
+    blogs: state.blogs
+  }
 }
 
-const ConnectApp = connect(null, mapDispatchToProps)(App)
+const mapDispatchToProps = {
+  initializeBlogs,
+  removeBlog,
+  setMessage,
+}
 
-export default ConnectApp
+const ConnectedApp = connect(mapStateToProps, mapDispatchToProps)(App)
+
+export default ConnectedApp

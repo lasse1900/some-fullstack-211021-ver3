@@ -7,13 +7,12 @@ const setToken = newToken => {
   token = `bearer ${newToken}`
 }
 
-const create = async ({ newObject }) => {
-  const response = await axios({
-    method: 'post',
-    url: baseUrl,
-    data: newObject,
+const create = async (newBlog) => {
+  const config = {
     headers: { Authorization: token }
-  })
+  }
+
+  const response = await axios.post(baseUrl, newBlog, config)
   return response.data
 }
 
@@ -28,12 +27,18 @@ const getById = async (id) => {
   return response.data
 }
 
-const update = async (id, data) => {
-  const config = { headers: { Authorization: token } }
-  const request = axios.put(`${baseUrl}/${id}`, data, config)
-  const response = await request
-  return response.data
+// const update = async (id, data) => {
+//   const config = { headers: { Authorization: token } }
+//   const request = axios.put(`${baseUrl}/${id}`, data, config)
+//   const response = await request
+//   return response.data
+// }
+
+const update = (blog) => {
+  const request = axios.put(`${baseUrl}/${blog.id}`, blog)
+  return request.then(response => response.data)
 }
+
 
 const remove = async (id) => {
   const config = { headers: { Authorization: token } }
